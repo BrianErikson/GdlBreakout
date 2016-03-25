@@ -1,5 +1,6 @@
 # GDL-Breakout specific
-Third Party/
+/Assets/Third Party/
+/Assets/Third Party.meta
 
 /[Ll]ibrary/
 /[Tt]emp/
