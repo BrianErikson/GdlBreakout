@@ -2,11 +2,13 @@
 using System.Collections;
 
 public class BallBehavior : MonoBehaviour {
+    public float impactForce = 10f;
     public float startForce;
     public float topSpeed;
     public bool launched { get; private set; }
     
     private Rigidbody2D rb;
+    private ScreenShake screenShake;
 
     public BallBehavior()
     {
@@ -16,6 +18,7 @@ public class BallBehavior : MonoBehaviour {
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
+        screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ScreenShake>();
     }
 	
 	// Update is called once per frame
@@ -34,5 +37,10 @@ public class BallBehavior : MonoBehaviour {
             launched = true;
             rb.AddForce(new Vector2(0, startForce));
         }
+    }
+
+    void OnCollisionEnter2D(Collision2D coll)
+    {
+        screenShake.ShakeCamera(impactForce);
     }
 }
