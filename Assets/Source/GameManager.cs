@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour {
     // Use this for initialization
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+         DontDestroyOnLoad(gameObject);
+
     }
     void Start () {
         gameOverText = GameObject.FindGameObjectWithTag("GameOverText").GetComponent<Text>();

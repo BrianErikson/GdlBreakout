@@ -8,7 +8,6 @@ public class BrickBehavior : MonoBehaviour {
     public int health;
 
     private SpriteRenderer spriteRenderer;
-    private AudioSource audioSource;
 
 	// Use this for initialization
 	void Start () {
@@ -19,8 +18,6 @@ public class BrickBehavior : MonoBehaviour {
 
         spriteRenderer = GetComponent<SpriteRenderer>();
         UpdateSprite();
-
-        audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -32,7 +29,6 @@ public class BrickBehavior : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Ball")
         {
-            audioSource.Play();
             health--;
             if(health <= 0)
             {
