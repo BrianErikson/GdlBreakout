@@ -5,10 +5,12 @@ public class BallBehavior : MonoBehaviour {
     public float impactForce = 10f;
     public float startForce;
     public float topSpeed;
+    public float minSpeed;
     public bool launched { get; private set; }
     public float angleConstraint = 20;
     private Rigidbody2D rb;
     private ScreenShake screenShake;
+    private AudioSource audioSource;
 
     public BallBehavior()
     {
@@ -19,14 +21,21 @@ public class BallBehavior : MonoBehaviour {
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
         screenShake = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<ScreenShake>();
+        audioSource = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
 	void Update () {
+        //Initial speed is 140
         if (rb.velocity.magnitude > topSpeed)
         {
             rb.velocity = rb.velocity.normalized;
             rb.velocity = rb.velocity * topSpeed;
+        }
+        else if(rb.velocity.magnitude < minSpeed)
+        {
+            rb.velocity = rb.velocity.normalized;
+            rb.velocity = rb.velocity * minSpeed;
         }
         float angle = Mathf.Atan2(rb.velocity.y,rb.velocity.x)*Mathf.Rad2Deg;
         //leftside contraints
@@ -62,6 +71,7 @@ public class BallBehavior : MonoBehaviour {
     {
         if(coll.gameObject.tag == "Brick")
         {
+            audioSource.Play();
             screenShake.ShakeCamera(impactForce);
         }
     }
