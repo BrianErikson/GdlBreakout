@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour {
     public float gameOverTimer;
     private float passedTime;
     private bool startTimer = false;
+    private int level = 1;
     // Use this for initialization
     void Start () {
         gameOverText = GameObject.FindGameObjectWithTag("GameOverText").GetComponent<Text>();
@@ -20,25 +21,24 @@ public class GameManager : MonoBehaviour {
             passedTime += Time.deltaTime;
             if(passedTime > gameOverTimer)
             {
-                RestartLevel();
+                LoadLevel(1);
             }
         }
 	}
-    public void StartLevel()
-    {
-
-    }
-    public void RestartLevel()
-    {
-        Application.LoadLevel("Game");
-    }
     public void EndGame()
     {
         gameOverText.enabled = true;
         startTimer = true;
+
     }
     public void NextLevel()
     {
-
+        level++;
+        LoadLevel(level);
+    }
+    public void LoadLevel(int level)
+    {
+        this.level = level;
+        Application.LoadLevel("Level" + level);
     }
 }
