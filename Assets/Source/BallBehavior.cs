@@ -3,8 +3,16 @@ using System.Collections;
 
 public class BallBehavior : MonoBehaviour {
     public float startForce;
-    Rigidbody2D rb;
     public float topSpeed;
+    public bool launched { get; private set; }
+    
+    private Rigidbody2D rb;
+
+    public BallBehavior()
+    {
+        launched = false;
+    }
+
     // Use this for initialization
     void Start () {
         rb = gameObject.GetComponent<Rigidbody2D>();
@@ -18,8 +26,13 @@ public class BallBehavior : MonoBehaviour {
             rb.velocity = rb.velocity * topSpeed;
         }
 	}
+
     public void Launch()
     {
-        rb.AddForce(new Vector2(0, startForce));
+        if (!launched)
+        {
+            launched = true;
+            rb.AddForce(new Vector2(0, startForce));
+        }
     }
 }
