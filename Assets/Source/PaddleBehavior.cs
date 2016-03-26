@@ -4,9 +4,13 @@ using System.Collections;
 public class PaddleBehavior : MonoBehaviour {
     public float speed;
     Rigidbody2D ball;
+
+    private AudioSource audioSource;
+
 	// Use this for initialization
 	void Start () {
         ball = GameObject.FindGameObjectWithTag("Ball").GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -20,6 +24,8 @@ public class PaddleBehavior : MonoBehaviour {
     {
         if (coll.gameObject.tag == "Ball")
         {
+            audioSource.Play();
+
             Vector2 point = coll.contacts[0].point;
             float offset = gameObject.transform.worldToLocalMatrix.MultiplyPoint(new Vector3(point.x, point.y)).x;
             float angle = offset * -2.72f; //16.5*2.72 = 45 degrees
