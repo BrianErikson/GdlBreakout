@@ -13,7 +13,7 @@ public class InputBehavior : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKeyUp(KeyCode.Space) && !bb.launched)
         {
             bb.Launch();
             spaceText.enabled = false;
