@@ -1,63 +1,98 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
+    public static GameManager instance = null;
+
     Text gameOverText;
     Text levelText;
     public float gameOverTimer;
     private float passedTime;
     private bool startTimer = false;
-    private int level = 1;
-    // Use this for initialization
+   
     void Awake()
     {
-         DontDestroyOnLoad(gameObject);
-
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
     }
-    void Start () {
-        gameOverText = GameObject.FindGameObjectWithTag("GameOverText").GetComponent<Text>();
-        gameOverText.enabled = false;
-        levelText = GameObject.FindGameObjectWithTag("LevelText").GetComponent<Text>();
-        levelText.text = "Level" + level;
-        levelText.enabled = true;
+
+    // Use this for initialization
+    void Start ()
+    {
+        OnNewLevel();
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (startTimer == true)
         {
             passedTime += Time.deltaTime;
             if(passedTime > gameOverTimer)
             {
                 startTimer = false;
-                LoadLevel(1);
+                LoadLevel(0);
             }
         }
 	}
+
     public void EndGame()
     {
         gameOverText.enabled = true;
         startTimer = true;
 
     }
+
     public void NextLevel()
     {
-        level++;
-        LoadLevel(level);
+        int next = GetNextLevel();
+        //Debug.Log(SceneManager.GetAllScenes()[1].name);
+        if (next < SceneManager.sceneCountInBuildSettings)
+        {
+            LoadLevel(next);
+        }
+        else // you won!
+        {
+            gameOverText.text = "You won!";
+            EndGame();
+        }
     }
+
     public void LoadLevel(int level)
     {
-        this.level = level;
-        Application.LoadLevel("Level" + level);
-
+        SceneManager.LoadScene(level);
     }
+
     void OnLevelWasLoaded(int level)
+    {
+        OnNewLevel();
+    }
+
+    private void OnNewLevel()
     {
         gameOverText = GameObject.FindGameObjectWithTag("GameOverText").GetComponent<Text>();
         gameOverText.enabled = false;
         levelText = GameObject.FindGameObjectWithTag("LevelText").GetComponent<Text>();
-        levelText.text = "Level" + this.level;
+        levelText.text = "Level " + (GetCurrentLevel() + 1);
         levelText.enabled = true;
+    }
+
+    private int GetCurrentLevel()
+    {
+        return SceneManager.GetActiveScene().buildIndex;
+    }
+
+    private int GetNextLevel()
+    {
+        return SceneManager.GetActiveScene().buildIndex + 1;
     }
 }
