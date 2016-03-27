@@ -5,13 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
+    public int startLives = 3;
 
     Text gameOverText;
     Text levelText;
     public float gameOverTimer;
     private float passedTime;
     private bool startTimer = false;
-   
+    private int lives;
+
     void Awake()
     {
         if (instance != null)
@@ -20,6 +22,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
+            lives = startLives;
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
@@ -40,16 +43,36 @@ public class GameManager : MonoBehaviour {
             if(passedTime > gameOverTimer)
             {
                 startTimer = false;
-                LoadLevel(0);
+                passedTime = 0;
+
+                if (lives <= 0)
+                {
+                    lives = 3;
+                    LoadLevel(0);
+                }
+                else
+                {
+                    LoadLevel(GetCurrentLevel());
+                }
             }
         }
 	}
 
     public void EndGame()
     {
+        lives--;
+        gameOverText.text = lives + " tries left!";
+        if (lives <= 0)
+        {
+            gameOverText.text = "Game Over!";
+        }
+        else if (lives == 1)
+        {
+            gameOverText.text = "1 try left!";
+        }
+
         gameOverText.enabled = true;
         startTimer = true;
-
     }
 
     public void NextLevel()

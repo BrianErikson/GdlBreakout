@@ -87,11 +87,6 @@ public class BallBehavior : MonoBehaviour {
 
         }
     }
-    void OnCollisionExit2D(Collision2D coll)
-    {
-
-
-    }
 
     private void SetAngle(float angle)
     {
