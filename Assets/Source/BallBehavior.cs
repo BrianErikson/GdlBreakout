@@ -74,18 +74,23 @@ public class BallBehavior : MonoBehaviour {
         {
             audioSource.Play();
             screenShake.ShakeCamera(impactForce);
+            GameObject sparkGO = Instantiate<GameObject>(collisionEffect);
+            ParticleSystem sparkPS = sparkGO.GetComponent<ParticleSystem>();
+
+            Vector2 normal = coll.contacts[0].normal;
+            Vector2 contactPoint = coll.contacts[0].point;
+            Vector3 reflected = Vector3.Reflect(rb.velocity.normalized, normal);
+
+            sparkGO.transform.position = new Vector3(contactPoint.x, contactPoint.y, 0f);
+            sparkGO.transform.rotation = Quaternion.Euler(-(Mathf.Atan2(rb.velocity.normalized.y, -(rb.velocity.normalized.x))) * Mathf.Rad2Deg, -90f, 0f);
+            Debug.Log(Mathf.Atan2(reflected.y, reflected.x) * Mathf.Rad2Deg);
+
         }
+    }
+    void OnCollisionExit2D(Collision2D coll)
+    {
 
-        GameObject sparkGO = Instantiate<GameObject>(collisionEffect);
-        ParticleSystem sparkPS = sparkGO.GetComponent<ParticleSystem>();
 
-        Vector2 normal = coll.contacts[0].normal;
-        Vector2 contactPoint = coll.contacts[0].point;
-        Vector3 reflected = Vector3.Reflect(rb.velocity.normalized, normal);
-
-        sparkGO.transform.position = new Vector3(contactPoint.x, contactPoint.y, 0f);
-        sparkGO.transform.rotation = Quaternion.Euler(-90f, 0f, Mathf.Atan2(reflected.y, reflected.x) * Mathf.Rad2Deg);
-        Debug.Log(Mathf.Atan2(reflected.y, reflected.x) * Mathf.Rad2Deg);
     }
 
     private void SetAngle(float angle)
