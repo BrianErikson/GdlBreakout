@@ -6,10 +6,11 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour {
     public static GameManager instance = null;
     public int startLives = 3;
+    public float gameOverTimer;
+    public bool cheats = false;
 
     Text gameOverText;
     Text levelText;
-    public float gameOverTimer;
     private float passedTime;
     private bool startTimer = false;
     private int lives;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour {
 
                 if (lives <= 0)
                 {
-                    lives = 3;
+                    lives = startLives;
                     LoadLevel(0);
                 }
                 else
@@ -56,7 +57,12 @@ public class GameManager : MonoBehaviour {
                 }
             }
         }
-	}
+    }
+
+    void OnLevelWasLoaded(int level)
+    {
+        OnNewLevel();
+    }
 
     public void EndGame()
     {
@@ -95,9 +101,12 @@ public class GameManager : MonoBehaviour {
         SceneManager.LoadScene(level);
     }
 
-    void OnLevelWasLoaded(int level)
+    public void AddLives(int amount)
     {
-        OnNewLevel();
+        if (lives + amount > 0)
+        {
+            lives += amount;
+        }
     }
 
     private void OnNewLevel()
