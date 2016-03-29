@@ -18,7 +18,7 @@ public class BottomBehavior : MonoBehaviour {
         if (coll.gameObject.tag == "Ball")
         {
             Destroy(coll.gameObject);
-            gm.EndGame();
+            gm.EndGame(false);
         }
     }
 }

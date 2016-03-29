@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour {
 
     Text gameOverText;
     Text levelText;
-    private float passedTime;
-    private bool startTimer = false;
+    private float gameEndPassedTime;
+    private bool startEndGameTimer = false;
     private int lives;
 
     void Awake()
@@ -38,23 +38,16 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        if (startTimer == true)
+        if (startEndGameTimer == true)
         {
-            passedTime += Time.deltaTime;
-            if(passedTime > gameOverTimer)
+            gameEndPassedTime += Time.deltaTime;
+            if(gameEndPassedTime > gameOverTimer)
             {
-                startTimer = false;
-                passedTime = 0;
-
-                if (lives <= 0)
-                {
-                    lives = startLives;
-                    LoadLevel(0);
-                }
-                else
-                {
-                    LoadLevel(GetCurrentLevel());
-                }
+                startEndGameTimer = false;
+                gameEndPassedTime = 0;
+                
+                lives = startLives;
+                LoadLevel(0);
             }
         }
     }
@@ -64,27 +57,29 @@ public class GameManager : MonoBehaviour {
         OnNewLevel();
     }
 
-    public void EndGame()
+    public void EndGame(bool won)
     {
-        lives--;
-        gameOverText.text = lives + " tries left!";
-        if (lives <= 0)
+        if (!won)
         {
-            gameOverText.text = "Game Over!";
-        }
-        else if (lives == 1)
-        {
-            gameOverText.text = "1 try left!";
+            lives--;
+            gameOverText.text = lives + " tries left!";
+            if (lives <= 0)
+            {
+                gameOverText.text = "Game Over!";
+            }
+            else if (lives == 1)
+            {
+                gameOverText.text = "1 try left!";
+            }
         }
 
         gameOverText.enabled = true;
-        startTimer = true;
+        startEndGameTimer = true;
     }
 
     public void NextLevel()
     {
         int next = GetNextLevel();
-        //Debug.Log(SceneManager.GetAllScenes()[1].name);
         if (next < SceneManager.sceneCountInBuildSettings)
         {
             LoadLevel(next);
@@ -92,7 +87,7 @@ public class GameManager : MonoBehaviour {
         else // you won!
         {
             gameOverText.text = "You won!";
-            EndGame();
+            EndGame(true);
         }
     }
 

@@ -56,7 +56,7 @@ public class InputBehavior : MonoBehaviour {
 
         if (Input.GetKeyUp(KeyCode.M))
         {
-            gm.EndGame();
+            gm.EndGame(false);
             cheatDownAudio.Play();
         }
 
