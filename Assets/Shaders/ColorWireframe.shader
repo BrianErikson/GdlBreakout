@@ -2,7 +2,9 @@
 {
 	Properties
 	{
-		_MainTex ("Texture", 2D) = "white" {}
+		_UVTex("Ignored", 2D) = "White" {}
+		_LineColor("LineColor", Vector) = (0, 1, 0, 1)
+		_LineThickness("LineThickness", float) = 0.2
 	}
 	SubShader
 	{
@@ -29,28 +31,30 @@
 				float4 vertex : SV_POSITION;
 			};
 
-			sampler2D _MainTex;
-			float4 _MainTex_ST;
+			sampler2D _UVTex;
+			float4 _LineColor;
+			float _LineThickness;
+			float4 _UVTex_ST;
 			
 			v2f vert (appdata v)
 			{
 				v2f o;
 				o.vertex = mul(UNITY_MATRIX_MVP, v.vertex);
-				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+				o.uv = TRANSFORM_TEX(v.uv, _UVTex);
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
 			
 			fixed4 frag (v2f i) : SV_Target
 			{
-				// sample the texture
+				float topBar = step(1 - _LineThickness, i.uv.y);
+				float leftBar = step(1 - _LineThickness, i.uv.x);
+				float bottomBar = step(i.uv.y, _LineThickness);
+				float rightBar = step(i.uv.x, _LineThickness);
 
-				//fixed4 col = tex2D(_MainTex, i.uv);
-				//float val = min(i.uv.x + i.uv.y, 1);
-				float r = step(0.8, 1 - sin((i.uv.x) * 3.15));
-				float g = step(0.8, 1 - sin((i.uv.y) * 3.15));
-				float val = max(r, g);
-				fixed4 col = fixed4(0, val, 0, val);
+				float val = min(1, topBar + leftBar + bottomBar + rightBar);
+
+				fixed4 col = fixed4(_LineColor.x, _LineColor.y, _LineColor.z, val);
 
 				return col;
 			}
